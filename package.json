@@ -1,0 +1,22 @@
+{
+  "name": "client-delivery-tracker-backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Shreeraj",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.3.0",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.11",
+    "prisma": "^7.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
