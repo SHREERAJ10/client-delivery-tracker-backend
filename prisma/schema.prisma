@@ -1,23 +1,15 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-}
-
-model User{
-  id String @id
-  username String
-  client Client[]
+  url = env("DATABASE_URL")
 }
 
 model Client{
   id String @id @default(uuid())
   name String
-  userId String
-  user User @relation(fields:[userId], references:[id])
   project Project[]
 }
 
