@@ -66,3 +66,15 @@ export const updateClient = async (req, res) => {
     }
   }
 };
+
+export const deleteClient = async (req, res)=>{
+  try{
+    const id = req.params.id;
+    await clientService.deleteClient(id);
+    res.status(200).json({ success: true, message: "Client Deleted Successfully!" })
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
+}

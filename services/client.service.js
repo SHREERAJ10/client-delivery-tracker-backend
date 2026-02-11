@@ -22,3 +22,11 @@ export const updateClient = async (id, clientName, email) => {
     },
   });
 };
+
+export const deleteClient = async (id) => {
+  await prisma.client.delete({
+    where: {
+      id: id,
+    },
+  });
+};
