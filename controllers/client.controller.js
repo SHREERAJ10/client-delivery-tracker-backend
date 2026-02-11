@@ -1,4 +1,4 @@
-
+import { Prisma } from "@prisma/client";
 import { clientSchema } from "../models/clientModel.js";
 import * as clientService from "../services/client.service.js";
 import { paginate } from "../utils/paginate.js";
@@ -22,29 +22,47 @@ export const getClient = async (req, res) => {
   }
 };
 
-export const createClient = async (req, res)=>{
-    try{
-        const {clientName} =  clientSchema.parse(req.body);
-        await clientService.createClient(clientName);
-        res.status(200).json({'success':true, 'message':"Client Created Successfully!"});
+export const createClient = async (req, res) => {
+  try {
+    const { clientName, email } = clientSchema.parse(req.body);
+    await clientService.createClient(clientName, email);
+    res
+      .status(200)
+      .json({ success: true, message: "Client Created Successfully!" });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code == "P2002") {
+        res.status(409).json({
+          success: false,
+          error: "'A client with this email already exists.",
+        });
+      }
+    } else {
+      res.status(500).json({ success: false, error: "internal server error!" });
+    }
+  }
+};
 
+export const updateClient = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { clientName, email } = clientSchema.parse(req.body);
+    await clientService.updateClient(id, clientName, email);
+    res
+      .status(200)
+      .json({ success: true, message: "Client Updated Successfully!" });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code == "P2002") {
+        res.status(409).json({
+          success: false,
+          error: "'A client with this email already exists.",
+        });
+      }
+    } else {
+      res.status(500).json({ success: false, error: "internal server error!" });
     }
-    catch(err){
-        console.log(err);
-        res.status(500).json({'success':false,'error':"internal server error!"});
-    }
-}
-
-export const updateClient = async (req, res)=>{
-  try{
-        const id = req.params.id;
-        const {clientName} =  clientSchema.parse(req.body);
-        await clientService.updateClient(clientName, id);
-        res.status(200).json({'success':true, 'message':"Client Updated Successfully!"});
-
-    }
-    catch(err){
-        console.log(err);
-        res.status(500).json({'success':false,'error':"internal server error!"});
-    }
-}
+  }
+};
