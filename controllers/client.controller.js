@@ -31,6 +31,20 @@ export const createClient = async (req, res)=>{
     }
     catch(err){
         console.log(err);
-        res.json({'success':false,'error':"internal server error!"});
+        res.status(500).json({'success':false,'error':"internal server error!"});
+    }
+}
+
+export const updateClient = async (req, res)=>{
+  try{
+        const id = req.params.id;
+        const {clientName} =  clientSchema.parse(req.body);
+        await clientService.updateClient(clientName, id);
+        res.status(200).json({'success':true, 'message':"Client Updated Successfully!"});
+
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({'success':false,'error':"internal server error!"});
     }
 }
