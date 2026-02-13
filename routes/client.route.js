@@ -5,7 +5,7 @@ import { createClient, deleteClient, getClient, updateClient } from '../controll
 
 const router = express.Router();
 
-router.use('/project', projectRouter);
+router.use('/:clientId/project', projectRouter);
 
 router.post('/', verifyToken, createClient);
 router.get('/',verifyToken, getClient);
