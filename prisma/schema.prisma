@@ -36,9 +36,16 @@ model Deliverable{
   status Status @relation(fields:[statusId], references:[id])
 }
 
+enum statusType {
+  PROJECT
+  DELIVERABLE
+}
+
 model Status{
   id String @id @default(uuid())
   status String
+  statusType statusType
   deliverable Deliverable[]
   project Project[]
+  @@unique(name:"status_statusType",[status, statusType])
 }
