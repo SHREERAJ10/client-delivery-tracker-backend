@@ -11,7 +11,7 @@ export const paginate = async (page, pageSize, modelName, where, include)=>{
         });
         const items = await db.findMany({
             where: where || {},
-            select: include || {},
+            include: include || {},
             skip: skip,
             take: pageSize,
         });
