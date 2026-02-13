@@ -25,3 +25,16 @@ export const deleteProject = async (id) => {
     },
   });
 };
+
+export const updateProject = async (id, projectName, statusId, due_Date) => {
+  await prisma.project.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: projectName,
+      statusId:statusId,
+      due_Date:due_Date,
+    },
+  });
+};

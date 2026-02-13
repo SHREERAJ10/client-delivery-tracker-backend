@@ -1,9 +1,10 @@
+import { projectSchema } from "../models/projectModel.js";
 import * as projectService from "../services/project.service.js";
 import { paginate } from "../utils/paginate.js";
 
 export const createProject = async (req, res) => {
   try {
-    const { projectName, clientId, statusId, due_Date } = req.body;
+    const { projectName, clientId, statusId, due_Date } = projectSchema.parse(req.body);
     await projectService.createProject(
       projectName,
       statusId,
@@ -33,8 +34,8 @@ export const getProject = async (req, res) => {
       {
         clientId: clientId,
       },
-      { 
-        status:true,
+      {
+        status: true,
       },
     );
     res.status(200).json({ success: true, projects: projects });
@@ -51,6 +52,20 @@ export const deleteProject = async (req, res) => {
     res
       .status(200)
       .json({ success: true, message: "Project Deleted Successfully!" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
+};
+
+export const updateProject = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { projectName, statusId, due_Date } = projectSchema.parse(req.body);
+    await projectService.updateProject(id, projectName, statusId, due_Date);
+    res
+      .status(200)
+      .json({ success: true, message: "Project Updated Successfully!" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, error: "internal server error!" });
