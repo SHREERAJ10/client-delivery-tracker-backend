@@ -17,3 +17,11 @@ export const createProject = async (
     },
   });
 };
+
+export const deleteProject = async (id) => {
+  await prisma.project.delete({
+    where: {
+      id: id,
+    },
+  });
+};

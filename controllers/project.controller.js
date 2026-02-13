@@ -43,3 +43,16 @@ export const getProject = async (req, res) => {
     res.status(500).json({ success: false, error: "internal server error!" });
   }
 };
+
+export const deleteProject = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await projectService.deleteProject(id);
+    res
+      .status(200)
+      .json({ success: true, message: "Project Deleted Successfully!" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
+};
