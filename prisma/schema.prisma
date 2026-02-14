@@ -32,7 +32,7 @@ model Deliverable{
   statusId String
   due_Date DateTime
   note String? @db.VarChar(100)
-  project Project @relation(fields:[projectId], references:[id])
+  project Project @relation(fields:[projectId], references:[id], onDelete:Cascade)
   status Status @relation(fields:[statusId], references:[id])
 }
 
