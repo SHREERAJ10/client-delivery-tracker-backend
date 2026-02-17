@@ -27,3 +27,17 @@ export const deleteDeliverable = async (id) => {
     },
   });
 };
+
+export const updateDeliverable = async (id, deliverableName, statusId, due_Date, note) => {
+  await prisma.deliverable.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: deliverableName,
+      statusId:statusId,
+      due_Date:due_Date,
+      note:note,
+    },
+  });
+};

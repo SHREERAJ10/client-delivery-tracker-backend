@@ -57,3 +57,17 @@ export const deleteDeliverable = async (req, res) => {
     res.status(500).json({ success: false, error: "internal server error!" });
   }
 };
+
+export const updateDeliverable= async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { deliverableName, statusId, due_Date, note } = deliverableSchema.parse(req.body);
+    await deliverableService.updateDeliverable(id, deliverableName, statusId, due_Date, note);
+    res
+      .status(200)
+      .json({ success: true, message: "Deliverable Updated Successfully!" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
+};
