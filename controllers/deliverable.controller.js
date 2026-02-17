@@ -44,3 +44,16 @@ export const getDeliverable = async (req, res) => {
     res.status(500).json({ success: false, error: "internal server error!" });
   }
 };
+
+export const deleteDeliverable = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await deliverableService.deleteDeliverable(id);
+    res
+      .status(200)
+      .json({ success: true, message: "Deliverable Deleted Successfully!" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
+};

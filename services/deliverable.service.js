@@ -19,3 +19,11 @@ export const createDeliverable = async (
     },
   });
 };
+
+export const deleteDeliverable = async (id) => {
+  await prisma.deliverable.delete({
+    where: {
+      id: id,
+    },
+  });
+};
