@@ -38,3 +38,18 @@ export const getDeliverablesDueThisWeekCount = async ()=>{
 
   return dueThisWeekCount;
 }
+
+export const getOverdueDeliverablesCount = async ()=>{
+
+  const today = new Date();
+
+  const overdueDeliverablesCount = await prisma.deliverable.count({
+    where:{
+      due_Date:{
+        lt:today,
+      }
+    }
+  });
+  
+  return overdueDeliverablesCount;
+}
