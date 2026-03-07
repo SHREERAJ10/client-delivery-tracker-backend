@@ -4,6 +4,6 @@ import { getDashboardMetrics } from '../controllers/dashboard.controller.js';
 
 const router = express.Router();
 
-router.get('/',verifyToken, getDashboardMetrics)
+router.get('/',verifyToken, getDashboardMetrics);
 
 export default router;
