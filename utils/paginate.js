@@ -2,8 +2,7 @@ import {PrismaClient} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const paginate = async (page, pageSize, modelName, where, include)=>{
-    try{
+export const paginate = async (page, pageSize, modelName, where, select)=>{
         const db = prisma[modelName];
         const skip = (+page - 1) * +pageSize;
         const totalCount = await db.count({
@@ -11,7 +10,7 @@ export const paginate = async (page, pageSize, modelName, where, include)=>{
         });
         const items = await db.findMany({
             where: where || {},
-            include: include || {},
+            select: select || {},
             skip: skip,
             take: pageSize,
         });
@@ -22,8 +21,4 @@ export const paginate = async (page, pageSize, modelName, where, include)=>{
             currentPage: page,
             previousPage: page - 1,
         }
-    }
-    catch (err){
-        console.log(err);
-    }
 }

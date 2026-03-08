@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { paginate } from "../utils/paginate.js";
 
 const prisma = new PrismaClient();
 
@@ -52,40 +53,87 @@ export const getOverdueDeliverablesCount = async () => {
   return overdueDeliverablesCount;
 };
 
-export const getOverdueDeliverbles = async () => {
+export const getOverdueDeliverbles = async (currPage) => {
   const today = new Date();
 
-  const overdueDeliverables = await prisma.deliverable.findMany({
-    where: {
+  const overdueDeliverables = await paginate(
+    currPage,
+    5,
+    "deliverable",
+    {
       due_Date: {
         lt: today,
       },
-      status:{
-        status:{
-          not: "Delivered"
-        }
-      }
+      status: {
+        status: {
+          not: "Delivered",
+        },
+      },
     },
-    select: {
+    {
       name: true,
       due_Date: true,
-      status:{
-        select:{
-          status:true,
-        }
+      status: {
+        select: {
+          status: true,
+        },
       },
-      project:{
-        select:{
-          name:true,
-          client:{
-            select:{
-              name:true,
-            }
-          }
-        }
+      project: {
+        select: {
+          name: true,
+          client: {
+            select: {
+              name: true,
+            },
+          },
+        },
       },
     },
-  });
+  );
 
   return overdueDeliverables;
+};
+
+export const getUpcomingDeliverables = async (currPage) => {
+  const currDate = new Date();
+  const today = currDate.getDate();
+  const lastDate = new Date(currDate.setDate(today + 7));
+
+  const upcomingDeliverables = await paginate(
+    currPage,
+    5,
+    "deliverable",
+    {
+      due_Date: {
+        gte: currDate,
+        lte: lastDate,
+      },
+      status: {
+        status: {
+          not: "Delivered",
+        },
+      },
+    },
+    {
+      name: true,
+      due_Date: true,
+      status: {
+        select: {
+          status: true,
+        },
+      },
+      project: {
+        select: {
+          name: true,
+          client: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  );
+
+  return upcomingDeliverables;
 };
