@@ -4,10 +4,11 @@ import { paginate } from "../utils/paginate.js";
 
 export const createProject = async (req, res) => {
   try {
-    const { projectName, clientId, statusId, due_Date } = projectSchema.parse(req.body);
+    const { projectName, clientId, statusId, statusDetail, due_Date } = projectSchema.parse(req.body);
     await projectService.createProject(
       projectName,
       statusId,
+      statusDetail,
       due_Date,
       clientId,
     );
@@ -61,8 +62,8 @@ export const deleteProject = async (req, res) => {
 export const updateProject = async (req, res) => {
   try {
     const id = req.params.id;
-    const { projectName, statusId, due_Date } = projectSchema.parse(req.body);
-    await projectService.updateProject(id, projectName, statusId, due_Date);
+    const { projectName, statusId, statusDetail, due_Date } = projectSchema.parse(req.body);
+    await projectService.updateProject(id, projectName, statusId, statusDetail, due_Date);
     res
       .status(200)
       .json({ success: true, message: "Project Updated Successfully!" });

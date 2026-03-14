@@ -19,6 +19,7 @@ model Project{
   name String
   clientId String
   statusId String
+  status_Detail String @db.VarChar(100)
   due_Date DateTime
   client Client @relation(fields:[clientId], references:[id], onDelete:Cascade)
   status Status @relation(fields:[statusId], references:[id])

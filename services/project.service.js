@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 export const createProject = async (
   projectName,
   statusId,
+  statusDetail,
   due_Date,
   clientId,
 ) => {
@@ -12,6 +13,7 @@ export const createProject = async (
     data: {
       name: projectName,
       statusId: statusId,
+      status_Detail:statusDetail,
       due_Date: due_Date,
       clientId: clientId,
     },
@@ -26,7 +28,7 @@ export const deleteProject = async (id) => {
   });
 };
 
-export const updateProject = async (id, projectName, statusId, due_Date) => {
+export const updateProject = async (id, projectName, statusId, statusDetail, due_Date) => {
   await prisma.project.update({
     where: {
       id: id,
@@ -34,6 +36,7 @@ export const updateProject = async (id, projectName, statusId, due_Date) => {
     data: {
       name: projectName,
       statusId:statusId,
+      status_Detail:statusDetail,
       due_Date:due_Date,
     },
   });
