@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const groupByAndCount = async (model, by, where) => {
+export const groupByAndCount = async (model, by, where) => {
   return await prisma[model].groupBy({
     by: by,
     where: where,
