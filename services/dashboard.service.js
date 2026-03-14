@@ -56,42 +56,54 @@ export const getOverdueDeliverablesCount = async () => {
 export const getOverdueDeliverbles = async (currPage) => {
   const today = new Date();
 
-  const overdueDeliverables = await paginate(
-    currPage,
-    5,
-    "deliverable",
-    {
-      due_Date: {
-        lt: today,
-      },
-      status: {
+  const overdueDeliverables = (
+    await paginate(
+      currPage,
+      5,
+      "deliverable",
+      {
+        due_Date: {
+          lt: today,
+        },
         status: {
-          not: "Delivered",
+          status: {
+            not: "Delivered",
+          },
         },
       },
-    },
-    {
-      name: true,
-      due_Date: true,
-      status: {
-        select: {
-          status: true,
+      {
+        name: true,
+        due_Date: true,
+        status: {
+          select: {
+            status: true,
+          },
         },
-      },
-      project: {
-        select: {
-          name: true,
-          client: {
-            select: {
-              name: true,
+        project: {
+          select: {
+            name: true,
+            client: {
+              select: {
+                name: true,
+              },
             },
           },
         },
       },
-    },
-  );
+    )
+  ).items;
 
-  return overdueDeliverables;
+  const response = overdueDeliverables.map((deliverable) => {
+    return {
+      name: deliverable.name,
+      status: deliverable.status.status,
+      due_Date: deliverable.due_Date,
+      projectName: deliverable.project.name,
+      clientName: deliverable.project.client.name,
+    };
+  });
+
+  return response;
 };
 
 export const getUpcomingDeliverables = async (currPage) => {
@@ -99,7 +111,7 @@ export const getUpcomingDeliverables = async (currPage) => {
   const today = currDate.getDate();
   const lastDate = new Date(currDate.setDate(today + 7));
 
-  const upcomingDeliverables = await paginate(
+  const upcomingDeliverables = (await paginate(
     currPage,
     5,
     "deliverable",
@@ -133,7 +145,17 @@ export const getUpcomingDeliverables = async (currPage) => {
         },
       },
     },
-  );
+  )).items;
 
-  return upcomingDeliverables;
+  const response = upcomingDeliverables.map((deliverable) => {
+    return {
+      name: deliverable.name,
+      status: deliverable.status.status,
+      due_Date: deliverable.due_Date,
+      projectName: deliverable.project.name,
+      clientName: deliverable.project.client.name,
+    };
+  });
+
+  return response;
 };
