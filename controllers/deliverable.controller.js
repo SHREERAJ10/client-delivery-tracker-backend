@@ -4,7 +4,8 @@ import { paginate } from "../utils/paginate.js";
 
 export const createDeliverable = async (req, res) => {
   try {
-    const { deliverableName, projectId, statusId, due_Date, note } = deliverableSchema.parse(req.body);
+    const { deliverableName, projectId, statusId, due_Date, note } =
+      deliverableSchema.parse(req.body);
     await deliverableService.createDeliverable(
       deliverableName,
       statusId,
@@ -35,7 +36,11 @@ export const getDeliverable = async (req, res) => {
         projectId: projectId,
       },
       {
+        id:true,
+        name: true,
+        due_Date: true,
         status: true,
+        note: true,
       },
     );
     res.status(200).json({ success: true, deliverables: deliverables });
@@ -58,11 +63,18 @@ export const deleteDeliverable = async (req, res) => {
   }
 };
 
-export const updateDeliverable= async (req, res) => {
+export const updateDeliverable = async (req, res) => {
   try {
     const id = req.params.id;
-    const { deliverableName, statusId, due_Date, note } = deliverableSchema.parse(req.body);
-    await deliverableService.updateDeliverable(id, deliverableName, statusId, due_Date, note);
+    const { deliverableName, statusId, due_Date, note } =
+      deliverableSchema.parse(req.body);
+    await deliverableService.updateDeliverable(
+      id,
+      deliverableName,
+      statusId,
+      due_Date,
+      note,
+    );
     res
       .status(200)
       .json({ success: true, message: "Deliverable Updated Successfully!" });
