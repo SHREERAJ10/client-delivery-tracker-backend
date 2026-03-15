@@ -28,16 +28,28 @@ export const deleteDeliverable = async (id) => {
   });
 };
 
-export const updateDeliverable = async (id, deliverableName, statusId, due_Date, note) => {
+export const updateDeliverable = async (
+  id,
+  deliverableName,
+  statusId,
+  due_Date,
+  note,
+) => {
   await prisma.deliverable.update({
     where: {
       id: id,
     },
     data: {
       name: deliverableName,
-      statusId:statusId,
-      due_Date:due_Date,
-      note:note,
+      statusId: statusId,
+      due_Date: due_Date,
+      note: note,
     },
+  });
+};
+
+export const deliverableCount = async (where) => {
+  return await prisma.deliverable.count({
+    where: where || {}
   });
 };

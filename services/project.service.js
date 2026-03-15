@@ -13,7 +13,7 @@ export const createProject = async (
     data: {
       name: projectName,
       statusId: statusId,
-      status_Detail:statusDetail,
+      status_Detail: statusDetail,
       due_Date: due_Date,
       clientId: clientId,
     },
@@ -28,16 +28,59 @@ export const deleteProject = async (id) => {
   });
 };
 
-export const updateProject = async (id, projectName, statusId, statusDetail, due_Date) => {
+export const updateProject = async (
+  id,
+  projectName,
+  statusId,
+  statusDetail,
+  due_Date,
+) => {
   await prisma.project.update({
     where: {
       id: id,
     },
     data: {
       name: projectName,
-      statusId:statusId,
-      status_Detail:statusDetail,
-      due_Date:due_Date,
+      statusId: statusId,
+      status_Detail: statusDetail,
+      due_Date: due_Date,
     },
   });
+};
+
+export const projectHealth = async (projectId) => {
+  const projectData = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+    },
+    select: {
+      due_Date: true,
+      status: {
+        select: {
+          status: true,
+        },
+      },
+    },
+  });
+
+  const today = new Date();
+  const atRiskDate = new Date(today.setDate(today.getDate() + 3));
+  let status;
+
+  if (
+    projectData.status.status == "Completed" ||
+    projectData.status.status == "Cancelled"
+  ) {
+    status = "Healthy";
+  } else if (today > projectData.due_Date) {
+    status = "Critical";
+  } else if (atRiskDate > projectData.due_Date) {
+    status = "At Risk";
+  } else if (projectData.status.status == "On Hold") {
+    status = "On Hold";
+  } else {
+    status = "On Track";
+  }
+
+  return status;
 };

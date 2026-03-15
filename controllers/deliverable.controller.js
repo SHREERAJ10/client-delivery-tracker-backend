@@ -1,5 +1,6 @@
 import { deliverableSchema } from "../models/deliverableModel.js";
 import * as deliverableService from "../services/deliverable.service.js";
+import { projectHealth } from "../services/project.service.js";
 import { paginate } from "../utils/paginate.js";
 
 export const createDeliverable = async (req, res) => {
@@ -36,7 +37,7 @@ export const getDeliverable = async (req, res) => {
         projectId: projectId,
       },
       {
-        id:true,
+        id: true,
         name: true,
         due_Date: true,
         status: true,
@@ -82,4 +83,39 @@ export const updateDeliverable = async (req, res) => {
     console.log(err);
     res.status(500).json({ success: false, error: "internal server error!" });
   }
+};
+
+export const getDeliverableStatus = async (req, res) => {
+  const { projectId } = req.params;
+  const totalDeliverables = await deliverableService.deliverableCount({
+    projectId: projectId,
+  });
+  const completedDeliverables = await deliverableService.deliverableCount({
+    projectId: projectId,
+    status: {
+      status: "Delivered",
+    },
+  });
+
+  const projectHealthData = await projectHealth(projectId);
+
+  const projectMetadata = [
+    {
+      label: "Total Deliverables",
+      key: "totalDeliverables",
+      data: totalDeliverables,
+    },
+    {
+      label: "Completed",
+      key: "completed",
+      value: completedDeliverables,
+    },
+    {
+      label: "Project Health",
+      key: "projectHealth",
+      value: projectHealthData,
+    },
+  ];
+
+  res.status(200).json({ success: true, data: projectMetadata });
 };
