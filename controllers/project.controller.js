@@ -29,7 +29,7 @@ export const getProject = async (req, res) => {
   const { clientId } = req.params;
   try {
     const currPage = req.query.page || 1;
-    const projects = (
+    const projectData = (
       await paginate(
         currPage,
         pageSize,
@@ -48,10 +48,11 @@ export const getProject = async (req, res) => {
           status_Detail: true,
         },
       )
-    ).items;
+    );
+
+    const projects = projectData.items;
 
     const projectIds = projects.map((project) => project.id);
-    console.log(projectIds);
 
     const totalDeliverablesArr = await groupByAndCount(
       "deliverable",
@@ -82,7 +83,7 @@ export const getProject = async (req, res) => {
       completedDeliverablesCount[deliverable.projectId] = deliverable._count.id;
     }
 
-    const response = projects.map((project) => {
+    projectData.items = projects.map((project) => {
       project.status = project.status.status;
       if (Object.hasOwn(totalDeliverablesCount, project.id)) {
         project.deliverable = {
@@ -95,7 +96,7 @@ export const getProject = async (req, res) => {
       return project;
     });
 
-    res.status(200).json({ success: true, data: projects });
+    res.status(200).json({ success: true, data: projectData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, error: "internal server error!" });

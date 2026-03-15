@@ -50,7 +50,7 @@ export const getClient = async (req, res) => {
   try {
     const currPage = req.query.page || 1;
 
-    const clients = (
+    const clientsData = (
       await paginate(
         currPage,
         pageSize,
@@ -62,7 +62,9 @@ export const getClient = async (req, res) => {
           email: true,
         },
       )
-    ).items;
+    );
+
+    const clients = clientsData.items;
 
     const clientIds = clients.map((c) => c.id); //array of ids of clients, paginated
 
@@ -106,7 +108,7 @@ export const getClient = async (req, res) => {
       projectId: { in: projectIds },
     });
 
-    const response = clients.map((client) => {
+    clientsData.items = clients.map((client) => {
       if (Object.hasOwn(activeProjectCount, client.id)) {
         client.project = {
           active: activeProjectCount[client.id],
@@ -123,7 +125,7 @@ export const getClient = async (req, res) => {
       return client;
     });
 
-    res.status(200).json({ success: true, data: response });
+    res.status(200).json({ success: true, data: clientsData });
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, error: "internal server error!" });
