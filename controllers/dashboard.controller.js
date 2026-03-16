@@ -10,24 +10,24 @@ export const getDashboardMetrics = async (req, res) => {
 
   const response = [
     {
-      name: "totalClients",
+      key: "totalClients",
       label: "Total Clients",
-      count: totalClients,
+      value: totalClients,
     },
     {
-      name: "activeProjects",
+      key: "activeProjects",
       label: "Active Projects",
-      count: activeProjects,
+      value: activeProjects,
     },
     {
-      name: "deliverablesDueThisWeek",
+      key: "deliverablesDueThisWeek",
       label: "Due This Week",
-      count: deliverablesDueThisWeek,
+      value: deliverablesDueThisWeek,
     },
     {
-      name: "overdueDeliverables",
+      key: "overdueDeliverables",
       label: "Overdue Deliverables",
-      count: overdueDeliverables,
+      value: overdueDeliverables,
     },
   ];
 
