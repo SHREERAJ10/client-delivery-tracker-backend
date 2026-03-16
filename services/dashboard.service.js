@@ -111,41 +111,43 @@ export const getUpcomingDeliverables = async (currPage) => {
   const today = currDate.getDate();
   const lastDate = new Date(currDate.setDate(today + 7));
 
-  const upcomingDeliverables = (await paginate(
-    currPage,
-    5,
-    "deliverable",
-    {
-      due_Date: {
-        gte: currDate,
-        lte: lastDate,
-      },
-      status: {
+  const upcomingDeliverables = (
+    await paginate(
+      currPage,
+      5,
+      "deliverable",
+      {
+        due_Date: {
+          gte: currDate,
+          lte: lastDate,
+        },
         status: {
-          not: "Delivered",
+          status: {
+            not: "Delivered",
+          },
         },
       },
-    },
-    {
-      name: true,
-      due_Date: true,
-      status: {
-        select: {
-          status: true,
+      {
+        name: true,
+        due_Date: true,
+        status: {
+          select: {
+            status: true,
+          },
         },
-      },
-      project: {
-        select: {
-          name: true,
-          client: {
-            select: {
-              name: true,
+        project: {
+          select: {
+            name: true,
+            client: {
+              select: {
+                name: true,
+              },
             },
           },
         },
       },
-    },
-  )).items;
+    )
+  ).items;
 
   const response = upcomingDeliverables.map((deliverable) => {
     return {
@@ -158,4 +160,14 @@ export const getUpcomingDeliverables = async (currPage) => {
   });
 
   return response;
+};
+
+export const getPendingDeliverables = async () => {
+  return await prisma.deliverable.count({
+    where: {
+      status: {
+        status: "In Review",
+      },
+    },
+  });
 };

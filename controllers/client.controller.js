@@ -3,6 +3,11 @@ import { clientSchema } from "../models/clientModel.js";
 import * as clientService from "../services/client.service.js";
 import { paginate } from "../utils/paginate.js";
 import { PrismaClient } from "@prisma/client";
+import {
+  getActiveProjects,
+  getOverdueDeliverablesCount,
+  getPendingDeliverables,
+} from "../services/dashboard.service.js";
 
 const prisma = new PrismaClient();
 
@@ -50,18 +55,16 @@ export const getClient = async (req, res) => {
   try {
     const currPage = req.query.page || 1;
 
-    const clientsData = (
-      await paginate(
-        currPage,
-        pageSize,
-        modelName,
-        {},
-        {
-          id: true,
-          name: true,
-          email: true,
-        },
-      )
+    const clientsData = await paginate(
+      currPage,
+      pageSize,
+      modelName,
+      {},
+      {
+        id: true,
+        name: true,
+        email: true,
+      },
     );
 
     const clients = clientsData.items;
@@ -188,4 +191,30 @@ export const deleteClient = async (req, res) => {
     console.log(err);
     res.status(500).json({ success: false, error: "internal server error!" });
   }
+};
+
+export const getProjectsStats = async (req, res) => {
+  const activeProjects = await getActiveProjects();
+  const overdueDeliverables = await getOverdueDeliverablesCount();
+  const pendingDeliverables = await getPendingDeliverables();
+
+  const projectStats = [
+    {
+      label: "Total Projects",
+      key: "totalActiveProjects",
+      value: activeProjects,
+    },
+    {
+      label: "Deliverables",
+      key: "pendingDeliverables",
+      value: pendingDeliverables,
+    },
+    {
+      label: "Immediate Attention",
+      key: "overdueDeliverables",
+      value: overdueDeliverables,
+    },
+  ];
+
+  res.status(200).json({ success: true, data: projectStats });
 };
