@@ -29,25 +29,24 @@ export const getProject = async (req, res) => {
   const { clientId } = req.params;
   try {
     const currPage = req.query.page || 1;
-    const projectData = (
-      await paginate(
-        currPage,
-        pageSize,
-        modelName,
-        {
-          clientId: clientId,
-        },
-        {
-          id: true,
-          name: true,
-          status: {
-            select: {
-              status: true,
-            },
+    const projectData = await paginate(
+      currPage,
+      pageSize,
+      modelName,
+      {
+        clientId: clientId,
+      },
+      {
+        id: true,
+        name: true,
+        status: {
+          select: {
+            status: true,
+            id: true,
           },
-          status_Detail: true,
         },
-      )
+        status_Detail: true,
+      },
     );
 
     const projects = projectData.items;
@@ -84,14 +83,19 @@ export const getProject = async (req, res) => {
     }
 
     projectData.items = projects.map((project) => {
-      project.status = project.status.status;
       if (Object.hasOwn(totalDeliverablesCount, project.id)) {
         project.deliverable = {
           total: totalDeliverablesCount[project.id],
         };
+      } else {
+        project.deliverable = {
+          total: 0,
+        };
       }
       if (Object.hasOwn(completedDeliverablesCount, project.id)) {
-        project.deliverable.completed = totalDeliverablesCount[project.id];
+        project.deliverable.completed = completedDeliverablesCount[project.id];
+      } else {
+        project.deliverable.completed = 0;
       }
       return project;
     });
