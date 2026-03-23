@@ -53,13 +53,13 @@ export const getOverdueDeliverablesCount = async () => {
   return overdueDeliverablesCount;
 };
 
-export const getOverdueDeliverbles = async (currPage) => {
+export const getOverdueDeliverbles = async (currPage, pageSize) => {
   const today = new Date();
 
   const overdueDeliverables = (
     await paginate(
       currPage,
-      5,
+      pageSize,
       "deliverable",
       {
         due_Date: {

@@ -37,11 +37,12 @@ export const getDashboardMetrics = async (req, res) => {
 export const getDeliverables = async (req, res) => {
   const deliverableType = req.query.type || "overdue";
   const currPage = req.query.page || 1;
+  const pageSize = +req.query.pageSize || 10;
   const response =
     deliverableType == "overdue"
-      ? await dashboardService.getOverdueDeliverbles(currPage)
+      ? await dashboardService.getOverdueDeliverbles(currPage, pageSize)
       : deliverableType == "upcoming"
-        ? await dashboardService.getUpcomingDeliverables(currPage)
+        ? await dashboardService.getUpcomingDeliverables(currPage, pageSize)
         : null;
   res.status(200).json({ success: true, data: response });
 };
