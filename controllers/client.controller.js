@@ -50,7 +50,7 @@ const deliverableCountPerClient = async (projects, where) => {
 };
 
 export const getClient = async (req, res) => {
-  const pageSize = 5;
+  const pageSize = 10;
   const modelName = "client";
   try {
     const currPage = req.query.page || 1;
@@ -116,14 +116,24 @@ export const getClient = async (req, res) => {
         client.project = {
           active: activeProjectCount[client.id],
         };
+      } else {
+        client.project = {
+          active: 0,
+        };
       }
       if (Object.hasOwn(overdueDeliverableCount, client.id)) {
         client.deliverable = {
           overdue: overdueDeliverableCount[client.id],
         };
+      } else {
+        client.deliverable = {
+          overdue: 0,
+        };
       }
       if (Object.hasOwn(openDeliverableCount, client.id)) {
         client.deliverable.open = openDeliverableCount[client.id];
+      } else {
+        client.deliverable.open = 0;
       }
       return client;
     });
