@@ -30,3 +30,13 @@ export const deleteClient = async (id) => {
     },
   });
 };
+
+export const getClients = async () => {
+   const clients = await prisma.client.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+  return clients;
+};

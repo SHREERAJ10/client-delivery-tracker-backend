@@ -49,7 +49,12 @@ const deliverableCountPerClient = async (projects, where) => {
   return clientToDeliverableCountMap;
 };
 
-export const getClient = async (req, res) => {
+export const getClients = async (req, res) => {
+  const clients = await clientService.getClients();
+  res.status(200).json({ success: true, data: clients });
+};
+
+export const getClientOverview = async (req, res) => {
   const pageSize = 10;
   const modelName = "client";
   try {
