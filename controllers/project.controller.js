@@ -23,7 +23,7 @@ export const createProject = async (req, res) => {
   }
 };
 
-export const getProject = async (req, res) => {
+export const getProjectDetails = async (req, res) => {
   const pageSize = 10;
   const modelName = "project";
   const { clientId } = req.params;
