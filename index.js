@@ -1,6 +1,7 @@
 import express from "express";
 import clientRouter from "./routes/client.route.js";
 import dashboardRouter from "./routes/dashboard.route.js";
+import projectRouter from "./routes/project.route.js";
 import cors from 'cors';
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(cors({
     origin:"http://localhost:5173"
 }))
 app.use("/client", clientRouter);
+app.use("/project",projectRouter);
 app.use("/dashboard", dashboardRouter);
 
 app.listen(3000, () => {

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ log: ["query"] });
 
 export const createProject = async (
   projectName,
@@ -83,4 +83,24 @@ export const projectHealth = async (projectId) => {
   }
 
   return status;
+};
+
+export const searchProject = async (searchQuery) => {
+  const projects = await prisma.project.findMany({
+    where: {
+      name: {
+        contains: searchQuery,
+        mode: "insensitive",
+      },
+    },
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
+  return projects;
 };
