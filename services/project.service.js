@@ -104,3 +104,14 @@ export const searchProject = async (searchQuery) => {
 
   return projects;
 };
+
+export const getProjects = async () => {
+  const projects = await prisma.project.findMany({
+    select: {
+      id: true,
+      name: true,
+      clientId: true,
+    },
+  });
+  return projects;
+};

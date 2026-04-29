@@ -153,3 +153,8 @@ export const searchProject = async (req, res) => {
     res.status(500).json({ success: false, error: "internal server error!" });
   }
 };
+
+export const getProjects = async (req, res) =>{
+  const projects = await projectService.getProjects();
+  res.status(200).json({success:true, data:projects});
+}
