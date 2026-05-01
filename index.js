@@ -3,6 +3,8 @@ import clientRouter from "./routes/client.route.js";
 import dashboardRouter from "./routes/dashboard.route.js";
 import projectRouter from "./routes/project.route.js";
 import cors from 'cors';
+import verifyToken from "./middlewares/verifyToken.js";
+import { getStatus } from "./controllers/status.controller.js";
 
 const app = express();
 
@@ -13,6 +15,7 @@ app.use(cors({
 app.use("/client", clientRouter);
 app.use("/project",projectRouter);
 app.use("/dashboard", dashboardRouter);
+app.get("/status", verifyToken, getStatus);
 
 app.listen(3000, () => {
   console.log("server listening on port 3000");
