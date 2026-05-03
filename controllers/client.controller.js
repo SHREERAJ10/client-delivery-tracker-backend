@@ -54,8 +54,14 @@ export const getClients = async (req, res) => {
   res.status(200).json({ success: true, data: clients });
 };
 
+export const getClient = async (req, res) => {
+  const { id } = req.params;
+  const client = await clientService.getClient(id);
+  res.status(200).json({ success: true, data: client });
+};
+
 export const getClientOverview = async (req, res) => {
-  const pageSize = 10;
+  const pageSize = 5;
   const modelName = "client";
   try {
     const currPage = req.query.page || 1;
@@ -218,16 +224,19 @@ export const getProjectsStats = async (req, res) => {
       label: "Total Projects",
       key: "totalActiveProjects",
       value: activeProjects,
+      status: "Active",
     },
     {
       label: "Deliverables",
       key: "pendingDeliverables",
       value: pendingDeliverables,
+      status: "Pending",
     },
     {
       label: "Immediate Attention",
       key: "overdueDeliverables",
       value: overdueDeliverables,
+      status: "Overdue",
     },
   ];
 

@@ -24,11 +24,11 @@ export const createProject = async (req, res) => {
 };
 
 export const getProjectDetails = async (req, res) => {
-  const pageSize = 10;
+  const pageSize = 5;
   const modelName = "project";
   const { clientId } = req.params;
   try {
-    const currPage = req.query.page || 1;
+    const currPage = Number(req.query.page || 1);
     const projectData = await paginate(
       currPage,
       pageSize,
