@@ -6,8 +6,8 @@ const router = express.Router({mergeParams:true});
 
 router.post("/", verifyToken, createDeliverable);
 router.get("/", verifyToken, getDeliverable);
+router.get("/status",verifyToken, getDeliverableStatus)
 router.delete("/:id", verifyToken, deleteDeliverable);
 router.put("/:id", verifyToken, updateDeliverable);
-router.get("/status",verifyToken, getDeliverableStatus)
 
 export default router;

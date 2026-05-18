@@ -1,6 +1,6 @@
 import express from 'express';
 import verifyToken from '../middlewares/verifyToken.js';
-import { createProject, deleteProject, getProjectDetails, getProjects, searchProject, updateProject } from '../controllers/project.controller.js';
+import { createProject, deleteProject, getProject, getProjectDetails, getProjects, searchProject, updateProject } from '../controllers/project.controller.js';
 import deliverableRouter from "../routes/deliverable.route.js";
 
 const router = express.Router({mergeParams:true});
@@ -10,6 +10,7 @@ router.use('/search',verifyToken, searchProject);
 router.post('/', verifyToken, createProject);
 router.get('/',verifyToken, getProjects);
 router.get('/details', verifyToken, getProjectDetails);
+router.get('/:id',verifyToken, getProject);
 router.delete('/:id', verifyToken, deleteProject);
 router.put('/:id', verifyToken, updateProject);
 
