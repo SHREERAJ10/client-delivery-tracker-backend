@@ -13,6 +13,14 @@ export const paginate = async (page, pageSize, modelName, where, select) => {
     select: select || {},
     skip: skip,
     take: pageSize,
+    orderBy: [
+      {
+        updatedAt: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+    ],
   });
 
   return {
