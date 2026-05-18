@@ -11,6 +11,8 @@ model Client{
   id String @id @default(uuid())
   name String
   email String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   project Project[]
 }
 
@@ -21,6 +23,8 @@ model Project{
   statusId String
   status_Detail String @db.VarChar(100)
   due_Date DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   client Client @relation(fields:[clientId], references:[id], onDelete:Cascade)
   status Status @relation(fields:[statusId], references:[id])
   deliverable Deliverable[]
@@ -33,6 +37,8 @@ model Deliverable{
   statusId String
   due_Date DateTime
   note String? @db.VarChar(100)
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt
   project Project @relation(fields:[projectId], references:[id], onDelete:Cascade)
   status Status @relation(fields:[statusId], references:[id])
 }
