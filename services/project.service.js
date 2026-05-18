@@ -115,3 +115,17 @@ export const getProjects = async () => {
   });
   return projects;
 };
+
+export const getProject = async (id) => {
+  const project = await prisma.project.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      name: true,
+      clientId: true,
+    },
+  });
+  return project;
+};

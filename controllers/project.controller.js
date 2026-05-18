@@ -39,6 +39,7 @@ export const getProjectDetails = async (req, res) => {
       {
         id: true,
         name: true,
+        due_Date: true,
         status: {
           select: {
             status: true,
@@ -154,7 +155,13 @@ export const searchProject = async (req, res) => {
   }
 };
 
-export const getProjects = async (req, res) =>{
+export const getProjects = async (req, res) => {
   const projects = await projectService.getProjects();
-  res.status(200).json({success:true, data:projects});
-}
+  res.status(200).json({ success: true, data: projects });
+};
+
+export const getProject = async (req, res) => {
+  const { id } = req.params;
+  const project = await projectService.getProject(id);
+  res.status(200).json({ success: true, data: project });
+};
