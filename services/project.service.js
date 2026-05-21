@@ -64,7 +64,6 @@ export const projectHealth = async (projectId) => {
   });
 
   const today = new Date();
-  const atRiskDate = new Date(today.setDate(today.getDate() + 3));
   let status;
 
   if (
@@ -72,12 +71,15 @@ export const projectHealth = async (projectId) => {
     projectData.status.status == "Cancelled"
   ) {
     status = "Healthy";
-  } else if (today > projectData.due_Date) {
-    status = "Critical";
-  } else if (atRiskDate > projectData.due_Date) {
-    status = "At Risk";
   } else if (projectData.status.status == "On Hold") {
     status = "On Hold";
+  } else if (
+    projectData.due_Date.getDate() - today.getDate() <= 3 &&
+    projectData.due_Date.getDate() - today.getDate() >= 0
+  ) {
+    status = "At Risk";
+  } else if (today > projectData.due_Date) {
+    status = "Critical";
   } else {
     status = "On Track";
   }
