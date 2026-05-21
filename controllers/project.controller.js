@@ -27,6 +27,30 @@ export const getProjectDetails = async (req, res) => {
   const pageSize = 5;
   const modelName = "project";
   const { clientId } = req.params;
+  const searchQuery = req.query.searchQuery;
+  console.log(clientId)
+
+  const search = searchQuery
+    ? {
+        OR: [
+          {
+            name: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+          },
+          {
+            status: {
+              status: {
+                contains: searchQuery,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      }
+    : {};
+
   try {
     const currPage = Number(req.query.page || 1);
     const projectData = await paginate(
@@ -35,6 +59,7 @@ export const getProjectDetails = async (req, res) => {
       modelName,
       {
         clientId: clientId,
+        ...search,
       },
       {
         id: true,
