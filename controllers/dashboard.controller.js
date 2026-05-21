@@ -37,7 +37,7 @@ export const getDashboardMetrics = async (req, res) => {
 export const getDeliverables = async (req, res) => {
   const deliverableType = req.query.type || "overdue";
   const currPage = req.query.page || 1;
-  const pageSize = +req.query.pageSize || 10;
+  const pageSize = +req.query.pageSize || 5;
   const response =
     deliverableType == "overdue"
       ? await dashboardService.getOverdueDeliverbles(currPage, pageSize)

@@ -108,8 +108,8 @@ export const getOverdueDeliverbles = async (currPage, pageSize) => {
 
 export const getUpcomingDeliverables = async (currPage) => {
   const currDate = new Date();
-  const today = currDate.getDate();
-  const lastDate = new Date(currDate.setDate(today + 7));
+  const today = new Date();
+  const lastDate = new Date(currDate.setDate(today.getDate() + 7));
 
   const upcomingDeliverables = (
     await paginate(
@@ -118,7 +118,7 @@ export const getUpcomingDeliverables = async (currPage) => {
       "deliverable",
       {
         due_Date: {
-          gte: currDate,
+          gte: today,
           lte: lastDate,
         },
         status: {
