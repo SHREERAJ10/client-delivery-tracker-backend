@@ -61,22 +61,37 @@ export const getClient = async (req, res) => {
 };
 
 export const getClientOverview = async (req, res) => {
+  const searchQuery = req.query.searchQuery;
   const pageSize = 5;
   const modelName = "client";
+
+  const search = searchQuery
+    ? {
+        OR: [
+          {
+            name: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+          },
+          {
+            email: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+          },
+        ],
+      }
+    : {};
+
   try {
     const currPage = req.query.page || 1;
 
-    const clientsData = await paginate(
-      currPage,
-      pageSize,
-      modelName,
-      {},
-      {
-        id: true,
-        name: true,
-        email: true,
-      },
-    );
+    const clientsData = await paginate(currPage, pageSize, modelName, search, {
+      id: true,
+      name: true,
+      email: true,
+    });
 
     const clients = clientsData.items;
 
