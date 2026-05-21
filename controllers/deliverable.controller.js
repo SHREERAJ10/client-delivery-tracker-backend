@@ -27,6 +27,29 @@ export const getDeliverable = async (req, res) => {
   const pageSize = 10;
   const modelName = "deliverable";
   const { projectId } = req.params;
+  const searchQuery = req.query.searchQuery;
+
+  const search = searchQuery
+    ? {
+        OR: [
+          {
+            name: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+          },
+          {
+            status: {
+              status: {
+                contains: searchQuery,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      }
+    : {};
+
   try {
     const currPage = req.query.page || 1;
     const deliverables = await paginate(
@@ -35,6 +58,7 @@ export const getDeliverable = async (req, res) => {
       modelName,
       {
         projectId: projectId,
+        ...search,
       },
       {
         id: true,
@@ -44,7 +68,7 @@ export const getDeliverable = async (req, res) => {
         note: true,
       },
     );
-    res.status(200).json({ success: true, deliverables: deliverables });
+    res.status(200).json({ success: true, data: deliverables });
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, error: "internal server error!" });
