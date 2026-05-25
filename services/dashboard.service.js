@@ -104,6 +104,14 @@ export const getDeliverables = async (
               },
             },
           },
+          {
+            status: {
+              status: {
+                contains: searchQuery,
+                mode: "insensitive",
+              },
+            },
+          },
         ],
       }
     : {};
