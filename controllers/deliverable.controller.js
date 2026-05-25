@@ -28,6 +28,7 @@ export const getDeliverable = async (req, res) => {
   const modelName = "deliverable";
   const { projectId } = req.params;
   const searchQuery = req.query.searchQuery;
+  const statusFilter = req.query.status;
 
   const search = searchQuery
     ? {
@@ -59,6 +60,7 @@ export const getDeliverable = async (req, res) => {
       {
         projectId: projectId,
         ...search,
+        ...(statusFilter && {status:{status:statusFilter}})
       },
       {
         id: true,
