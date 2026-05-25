@@ -53,103 +53,96 @@ export const getOverdueDeliverablesCount = async () => {
   return overdueDeliverablesCount;
 };
 
-export const getOverdueDeliverbles = async (currPage, pageSize) => {
-  const today = new Date();
-
-  const overdueDeliverables = (
-    await paginate(
-      currPage,
-      pageSize,
-      "deliverable",
-      {
-        due_Date: {
-          lt: today,
-        },
-        status: {
-          status: {
-            not: "Delivered",
-          },
-        },
-      },
-      {
-        name: true,
-        due_Date: true,
-        status: {
-          select: {
-            status: true,
-          },
-        },
-        project: {
-          select: {
-            name: true,
-            client: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    )
-  ).items;
-
-  const response = overdueDeliverables.map((deliverable) => {
-    return {
-      name: deliverable.name,
-      status: deliverable.status.status,
-      due_Date: deliverable.due_Date,
-      projectName: deliverable.project.name,
-      clientName: deliverable.project.client.name,
-    };
-  });
-
-  return response;
-};
-
-export const getUpcomingDeliverables = async (currPage) => {
+export const getDeliverables = async (
+  type,
+  currPage,
+  pageSize,
+  searchQuery,
+) => {
   const currDate = new Date();
   const today = new Date();
   const lastDate = new Date(currDate.setDate(today.getDate() + 7));
 
-  const upcomingDeliverables = (
-    await paginate(
-      currPage,
-      5,
-      "deliverable",
-      {
-        due_Date: {
-          gte: today,
-          lte: lastDate,
-        },
-        status: {
-          status: {
-            not: "Delivered",
+  const dueDate =
+    type == "overdue"
+      ? {
+          lt: today,
+        }
+      : type == "upcoming"
+        ? {
+            gte: today,
+            lte: lastDate,
+          }
+        : {};
+
+  console.log(dueDate);
+
+  const search = searchQuery
+    ? {
+        OR: [
+          {
+            name: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
           },
+          {
+            project: {
+              name: {
+                contains: searchQuery,
+                mode: "insensitive",
+              },
+            },
+          },
+          {
+            project: {
+              client: {
+                name: {
+                  contains: searchQuery,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+        ],
+      }
+    : {};
+
+  const deliverables = await paginate(
+    currPage,
+    pageSize,
+    "deliverable",
+    {
+      due_Date: dueDate,
+      status: {
+        status: {
+          not: "Delivered",
         },
       },
-      {
-        name: true,
-        due_Date: true,
-        status: {
-          select: {
-            status: true,
-          },
+      ...search,
+    },
+    {
+      name: true,
+      due_Date: true,
+      status: {
+        select: {
+          status: true,
         },
-        project: {
-          select: {
-            name: true,
-            client: {
-              select: {
-                name: true,
-              },
+      },
+      project: {
+        select: {
+          name: true,
+          client: {
+            select: {
+              name: true,
             },
           },
         },
       },
-    )
-  ).items;
+    },
+  );
 
-  const response = upcomingDeliverables.map((deliverable) => {
+  deliverables.items = deliverables.items.map((deliverable) => {
     return {
       name: deliverable.name,
       status: deliverable.status.status,
@@ -159,7 +152,7 @@ export const getUpcomingDeliverables = async (currPage) => {
     };
   });
 
-  return response;
+  return deliverables;
 };
 
 export const getPendingDeliverables = async () => {
