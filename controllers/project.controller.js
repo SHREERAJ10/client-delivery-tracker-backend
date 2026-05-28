@@ -168,19 +168,6 @@ export const updateProject = async (req, res) => {
   }
 };
 
-export const searchProject = async (req, res) => {
-  try {
-    const searchQuery = req.query.searchQuery || "";
-    const results = await projectService.searchProject(
-      String(searchQuery.trim()),
-    );
-    res.status(200).json({ success: true, data: results });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ success: false, error: "internal server error!" });
-  }
-};
-
 export const getProjects = async (req, res) => {
   try {
     const projects = await projectService.getProjects();

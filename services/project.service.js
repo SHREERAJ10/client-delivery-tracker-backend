@@ -85,26 +85,6 @@ export const projectHealth = async (projectId) => {
   return status;
 };
 
-export const searchProject = async (searchQuery) => {
-  const projects = await prisma.project.findMany({
-    where: {
-      name: {
-        contains: searchQuery,
-        mode: "insensitive",
-      },
-    },
-    orderBy: {
-      name: "asc",
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-
-  return projects;
-};
-
 export const getProjects = async () => {
   const projects = await prisma.project.findMany({
     select: {
