@@ -50,41 +50,50 @@ const deliverableCountPerClient = async (projects, where) => {
 };
 
 export const getClients = async (req, res) => {
-  const clients = await clientService.getClients();
-  res.status(200).json({ success: true, data: clients });
+  try {
+    const clients = await clientService.getClients();
+    res.status(200).json({ success: true, data: clients });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
 };
 
 export const getClient = async (req, res) => {
-  const { id } = req.params;
-  const client = await clientService.getClient(id);
-  res.status(200).json({ success: true, data: client });
+  try {
+    const { id } = req.params;
+    const client = await clientService.getClient(id);
+    res.status(200).json({ success: true, data: client });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
 };
 
 export const getClientOverview = async (req, res) => {
-  const searchQuery = req.query.searchQuery;
-  const pageSize = 5;
-  const modelName = "client";
-
-  const search = searchQuery
-    ? {
-        OR: [
-          {
-            name: {
-              contains: searchQuery,
-              mode: "insensitive",
-            },
-          },
-          {
-            email: {
-              contains: searchQuery,
-              mode: "insensitive",
-            },
-          },
-        ],
-      }
-    : {};
-
   try {
+    const searchQuery = req.query.searchQuery;
+    const pageSize = 5;
+    const modelName = "client";
+
+    const search = searchQuery
+      ? {
+          OR: [
+            {
+              name: {
+                contains: searchQuery,
+                mode: "insensitive",
+              },
+            },
+            {
+              email: {
+                contains: searchQuery,
+                mode: "insensitive",
+              },
+            },
+          ],
+        }
+      : {};
     const currPage = req.query.page || 1;
 
     const clientsData = await paginate(currPage, pageSize, modelName, search, {
@@ -184,7 +193,7 @@ export const createClient = async (req, res) => {
       if (err.code == "P2002") {
         res.status(409).json({
           success: false,
-          error: "'A client with this email already exists.",
+          error: "A client with this email already exists.",
         });
       }
     } else {
@@ -207,7 +216,7 @@ export const updateClient = async (req, res) => {
       if (err.code == "P2002") {
         res.status(409).json({
           success: false,
-          error: "'A client with this email already exists.",
+          error: "A client with this email already exists.",
         });
       }
     } else {
@@ -230,30 +239,35 @@ export const deleteClient = async (req, res) => {
 };
 
 export const getProjectsStats = async (req, res) => {
-  const activeProjects = await getActiveProjects();
-  const overdueDeliverables = await getOverdueDeliverablesCount();
-  const pendingDeliverables = await getPendingDeliverables();
+  try {
+    const activeProjects = await getActiveProjects();
+    const overdueDeliverables = await getOverdueDeliverablesCount();
+    const pendingDeliverables = await getPendingDeliverables();
 
-  const projectStats = [
-    {
-      label: "Total Projects",
-      key: "totalActiveProjects",
-      value: activeProjects,
-      status: "Active",
-    },
-    {
-      label: "Deliverables",
-      key: "pendingDeliverables",
-      value: pendingDeliverables,
-      status: "Pending",
-    },
-    {
-      label: "Immediate Attention",
-      key: "overdueDeliverables",
-      value: overdueDeliverables,
-      status: "Overdue",
-    },
-  ];
+    const projectStats = [
+      {
+        label: "Total Projects",
+        key: "totalActiveProjects",
+        value: activeProjects,
+        status: "Active",
+      },
+      {
+        label: "Deliverables",
+        key: "pendingDeliverables",
+        value: pendingDeliverables,
+        status: "Pending",
+      },
+      {
+        label: "Immediate Attention",
+        key: "overdueDeliverables",
+        value: overdueDeliverables,
+        status: "Overdue",
+      },
+    ];
 
-  res.status(200).json({ success: true, data: projectStats });
+    res.status(200).json({ success: true, data: projectStats });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
 };

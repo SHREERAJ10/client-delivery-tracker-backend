@@ -24,34 +24,33 @@ export const createDeliverable = async (req, res) => {
 };
 
 export const getDeliverable = async (req, res) => {
-  const pageSize = 10;
-  const modelName = "deliverable";
-  const { projectId } = req.params;
-  const searchQuery = req.query.searchQuery;
-  const statusFilter = req.query.status;
+  try {
+    const pageSize = 5;
+    const modelName = "deliverable";
+    const { projectId } = req.params;
+    const searchQuery = req.query.searchQuery;
+    const statusFilter = req.query.status;
 
-  const search = searchQuery
-    ? {
-        OR: [
-          {
-            name: {
-              contains: searchQuery,
-              mode: "insensitive",
-            },
-          },
-          {
-            status: {
-              status: {
+    const search = searchQuery
+      ? {
+          OR: [
+            {
+              name: {
                 contains: searchQuery,
                 mode: "insensitive",
               },
             },
-          },
-        ],
-      }
-    : {};
-
-  try {
+            {
+              status: {
+                status: {
+                  contains: searchQuery,
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
+        }
+      : {};
     const currPage = req.query.page || 1;
     const deliverables = await paginate(
       currPage,
@@ -60,7 +59,7 @@ export const getDeliverable = async (req, res) => {
       {
         projectId: projectId,
         ...search,
-        ...(statusFilter && {status:{status:statusFilter}})
+        ...(statusFilter && { status: { status: statusFilter } }),
       },
       {
         id: true,
@@ -112,36 +111,41 @@ export const updateDeliverable = async (req, res) => {
 };
 
 export const getDeliverableStatus = async (req, res) => {
-  const { projectId } = req.params;
-  const totalDeliverables = await deliverableService.deliverableCount({
-    projectId: projectId,
-  });
-  const completedDeliverables = await deliverableService.deliverableCount({
-    projectId: projectId,
-    status: {
-      status: "Delivered",
-    },
-  });
+  try {
+    const { projectId } = req.params;
+    const totalDeliverables = await deliverableService.deliverableCount({
+      projectId: projectId,
+    });
+    const completedDeliverables = await deliverableService.deliverableCount({
+      projectId: projectId,
+      status: {
+        status: "Delivered",
+      },
+    });
 
-  const projectHealthData = await projectHealth(projectId);
+    const projectHealthData = await projectHealth(projectId);
 
-  const projectMetadata = [
-    {
-      label: "Total Deliverables",
-      key: "totalDeliverables",
-      data: totalDeliverables,
-    },
-    {
-      label: "Completed",
-      key: "completed",
-      value: completedDeliverables,
-    },
-    {
-      label: "Project Health",
-      key: "projectHealth",
-      value: projectHealthData,
-    },
-  ];
+    const projectMetadata = [
+      {
+        label: "Total Deliverables",
+        key: "totalDeliverables",
+        value: totalDeliverables,
+      },
+      {
+        label: "Completed",
+        key: "completed",
+        value: completedDeliverables,
+      },
+      {
+        label: "Project Health",
+        key: "projectHealth",
+        value: projectHealthData,
+      },
+    ];
 
-  res.status(200).json({ success: true, data: projectMetadata });
+    res.status(200).json({ success: true, data: projectMetadata });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
 };

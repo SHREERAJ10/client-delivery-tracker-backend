@@ -182,12 +182,22 @@ export const searchProject = async (req, res) => {
 };
 
 export const getProjects = async (req, res) => {
-  const projects = await projectService.getProjects();
-  res.status(200).json({ success: true, data: projects });
+  try {
+    const projects = await projectService.getProjects();
+    res.status(200).json({ success: true, data: projects });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
 };
 
 export const getProject = async (req, res) => {
-  const { id } = req.params;
-  const project = await projectService.getProject(id);
-  res.status(200).json({ success: true, data: project });
+  try {
+    const { id } = req.params;
+    const project = await projectService.getProject(id);
+    res.status(200).json({ success: true, data: project });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "internal server error!" });
+  }
 };
