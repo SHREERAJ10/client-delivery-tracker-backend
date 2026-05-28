@@ -1,4 +1,4 @@
-import {prisma} from '../db.js'
+import { prisma } from "../db.js";
 
 /*
 PROJECT STATUS IDS
@@ -32,6 +32,97 @@ function daysFromNow(days) {
   return d;
 }
 
+async function createStatuses() {
+  const projectStatuses = [
+    {
+      id: PROJECT_STATUS.DRAFT,
+      status: "Draft",
+      statusType: "PROJECT",
+    },
+    {
+      id: PROJECT_STATUS.PLANNED,
+      status: "Planned",
+      statusType: "PROJECT",
+    },
+    {
+      id: PROJECT_STATUS.ACTIVE,
+      status: "Active",
+      statusType: "PROJECT",
+    },
+    {
+      id: PROJECT_STATUS.ON_HOLD,
+      status: "On Hold",
+      statusType: "PROJECT",
+    },
+    {
+      id: PROJECT_STATUS.AT_RISK,
+      status: "At Risk",
+      statusType: "PROJECT",
+    },
+    {
+      id: PROJECT_STATUS.COMPLETED,
+      status: "Completed",
+      statusType: "PROJECT",
+    },
+  ];
+
+  const deliverableStatuses = [
+    {
+      id: DELIVERABLE_STATUS.BACKLOG,
+      status: "Backlog",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.IN_PROGRESS,
+      status: "In Progress",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.BLOCKED,
+      status: "Blocked",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.IN_REVIEW,
+      status: "In Review",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.CHANGES_REQUESTED,
+      status: "Changes Requested",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.APPROVED,
+      status: "Approved",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.READY,
+      status: "Ready",
+      statusType: "DELIVERABLE",
+    },
+    {
+      id: DELIVERABLE_STATUS.DELIVERED,
+      status: "Delivered",
+      statusType: "DELIVERABLE",
+    },
+  ];
+
+  for (const s of [...projectStatuses, ...deliverableStatuses]) {
+    await prisma.status.upsert({
+      where: { id: s.id },
+      update: {
+        status: s.status,
+        statusType: s.statusType,
+      },
+      create: s,
+    });
+  }
+
+  console.log("Statuses created");
+}
+
 async function clearDatabase() {
   await prisma.$transaction([
     prisma.deliverable.deleteMany(),
@@ -44,6 +135,7 @@ async function clearDatabase() {
 
 async function main() {
   await clearDatabase();
+  await createStatuses();
 
   const clients = [
     { name: "BrightPath Marketing", email: "contact@brightpath.io" },
