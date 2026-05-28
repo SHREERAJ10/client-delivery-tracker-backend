@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../db.js";
 
 export const getStatus = async (type) => {
   const statusList = await prisma.status.findMany({

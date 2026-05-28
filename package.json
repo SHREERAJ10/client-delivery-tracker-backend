@@ -11,13 +11,13 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.0",
+    "@prisma/client": "^6.19.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "firebase": "^12.8.0",
     "firebase-admin": "^13.6.0",
     "nodemon": "^3.1.11",
-    "prisma": "^6.19.0",
+    "prisma": "^6.19.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {

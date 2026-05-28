@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../db.js";
 
 export const paginate = async (page, pageSize, modelName, where, select) => {
   const db = prisma[modelName];

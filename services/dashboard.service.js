@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../db.js";
 import { paginate } from "../utils/paginate.js";
-
-const prisma = new PrismaClient();
 
 export const getTotalClients = async () => {
   const totalClients = await prisma.client.count();

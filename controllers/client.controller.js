@@ -2,14 +2,12 @@ import { Prisma } from "@prisma/client";
 import { clientSchema } from "../models/clientModel.js";
 import * as clientService from "../services/client.service.js";
 import { paginate } from "../utils/paginate.js";
-import { PrismaClient } from "@prisma/client";
 import {
   getActiveProjects,
   getOverdueDeliverablesCount,
   getPendingDeliverables,
 } from "../services/dashboard.service.js";
-
-const prisma = new PrismaClient();
+import { prisma } from "../db.js";
 
 export const groupByAndCount = async (model, by, where) => {
   return await prisma[model].groupBy({
