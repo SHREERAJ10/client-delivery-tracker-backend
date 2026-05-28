@@ -11,6 +11,6 @@ export default defineConfig({
   },
   engine: "binary",
   datasource: {
-    url: process.env.DATABASE_URL,
+    url: env("DIRECT_URL"),
   },
 });
