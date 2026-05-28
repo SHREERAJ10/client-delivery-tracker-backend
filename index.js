@@ -22,6 +22,8 @@ app.get("/health", () => {
   res.send("OK");
 });
 
+console.log(process.env.DATABASE_URL);
+
 app.listen(3000, () => {
   console.log("server listening on port 3000");
 });
