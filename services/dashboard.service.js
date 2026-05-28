@@ -75,8 +75,6 @@ export const getDeliverables = async (
           }
         : {};
 
-  console.log(dueDate);
-
   const search = searchQuery
     ? {
         OR: [
