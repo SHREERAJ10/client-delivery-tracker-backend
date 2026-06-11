@@ -18,8 +18,10 @@ app.use("/client", clientRouter);
 app.use("/project", projectRouter);
 app.use("/dashboard", dashboardRouter);
 app.get("/status", verifyToken, getStatus);
-app.get("/health", () => {
-  res.send("OK");
+
+app.get("/health", async (req, res) => {
+  await prisma.$queryRaw`SELECT 1`;
+  res.json({ status: "ok" });
 });
 
 app.listen(3000, () => {
